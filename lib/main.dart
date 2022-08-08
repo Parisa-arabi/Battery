@@ -38,11 +38,18 @@ void getBatteryState() {
     });
   });
 }
+void batteryalarm(){
+    if(percentage=100){
+      FlutterRingtonePlayer.playNotification();
+    }
+}
 Widget BatteryBuild(BatteryState state) {
+
   switch (state) {
   // first case is for battery full state
   // then it will show green in color
     case BatteryState.full:
+      batteryalarm();
     // ignore: sized_box_for_whitespace
       return Container(
         width: 200,
@@ -57,8 +64,11 @@ Widget BatteryBuild(BatteryState state) {
 
   // Second case is when battery is charging
   // then it will show blue in color
-    case BatteryState.charging:
+    case BatteryState.charging :
     // ignore: sized_box_for_whitespace
+    if(BatteryState.full == true){
+      FlutterRingtonePlayer.playNotification();
+    }
       return Container(
         width: 200,
         height: 200,
@@ -75,7 +85,6 @@ Widget BatteryBuild(BatteryState state) {
   // discharged then it will show red in color
     case BatteryState.discharging:
     default:
-
     // ignore: sized_box_for_whitespace
       return Container(
         width: 200,
@@ -123,9 +132,9 @@ Widget BatteryBuild(BatteryState state) {
         ),
       ),
     );
-
   }
 }
 void firealaram(){
 print('ALARM FIRED ${DateTime.now()}');
+
 }
