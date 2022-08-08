@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:battery_plus/battery_plus.dart';
 import 'dart:async';
-void main ()=> runApp(battery());
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+void main () async {
+  runApp(battery());
+ await AndroidAlarmManager.initialize();
+}
 class battery extends StatefulWidget {
   @override
   State<battery> createState() => _batteryState();
@@ -25,6 +30,66 @@ void getBatteryPerentage() async {
 
   setState(() {});
 }
+void getBatteryState() {
+  streamSubscription = battery.onBatteryStateChanged.listen((state) {
+    batteryState = state;
+
+    setState(() {
+    });
+  });
+}
+Widget BatteryBuild(BatteryState state) {
+  switch (state) {
+  // first case is for battery full state
+  // then it will show green in color
+    case BatteryState.full:
+    // ignore: sized_box_for_whitespace
+      return Container(
+        width: 200,
+        height: 200,
+        // ignore: prefer_const_constructors
+        child: (Icon(
+          Icons.battery_full,
+          size: 200,
+          color: Colors.green,
+        )),
+      );
+
+  // Second case is when battery is charging
+  // then it will show blue in color
+    case BatteryState.charging:
+    // ignore: sized_box_for_whitespace
+      return Container(
+        width: 200,
+        height: 200,
+
+        // ignore: prefer_const_constructors
+        child: (Icon(
+          Icons.battery_charging_full,
+          size: 200,
+          color: Colors.blue,
+        )),
+      );
+
+  // third case is when the battery is
+  // discharged then it will show red in color
+    case BatteryState.discharging:
+    default:
+
+    // ignore: sized_box_for_whitespace
+      return Container(
+        width: 200,
+        height: 200,
+
+        // ignore: prefer_const_constructors
+        child: (Icon(
+          Icons.battery_alert,
+          size: 200,
+          color: Colors.red,
+        )),
+      );
+  }
+}
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -43,19 +108,24 @@ void getBatteryPerentage() async {
         ),
         body: Container(
           child: Center(
-            child: Row(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                IconButton(icon: Icon(Icons.battery_charging_full_sharp),
-                  onPressed: () { print('worked');},
-                  iconSize: 90,
-                  color: Colors.orange[300],
+                BatteryBuild(batteryState),
+                Text('Battery Percentage: $percentage',
+                  style: const TextStyle(
+                      fontSize: 24
+                  ),
                 ),
-              ],
+                ],
             ),
           ),
         ),
       ),
     );
+
   }
+}
+void firealaram(){
+print('ALARM FIRED ${DateTime.now()}');
 }
