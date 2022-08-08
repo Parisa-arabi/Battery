@@ -39,7 +39,7 @@ void getBatteryState() {
   });
 }
 void batteryalarm(){
-    if(percentage=100){
+    if(percentage==100){
       FlutterRingtonePlayer.playNotification();
     }
 }
